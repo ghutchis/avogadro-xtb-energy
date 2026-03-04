@@ -12,7 +12,8 @@ from xtb.libxtb import VERBOSITY_MUTED
 
 # Angstrom → Bohr conversion factor
 _ANG_TO_BOHR = 1.0 / 0.52917721067
-
+_HARTREE_TO_KJ_MOL = 2625.4996394799
+_HARTREE_BOHR_TO_KJ_MOL_ANG = _HARTREE_TO_KJ_MOL / _ANG_TO_BOHR
 
 def run():
     # Avogadro sends one compact JSON line on stdin, then keeps stdin open
@@ -42,9 +43,9 @@ def run():
         calc.update(coordinates)
         calc.singlepoint(res)
 
-        print("AvogadroEnergy:", res.get_energy())  # Hartree
+        print("AvogadroEnergy:", res.get_energy() * _HARTREE_TO_KJ_MOL)  # Hartree → kJ/mol
         print("AvogadroGradient:")
-        grad = res.get_gradient() * 4961.475  # Hartree/Bohr → kJ/mol/Å
+        grad = res.get_gradient() * _HARTREE_BOHR_TO_KJ_MOL_ANG  # Hartree/Bohr → kJ/mol/Å
         output = np.array2string(grad)
         output = output.replace("[", "").replace("]", "")
         print(output)

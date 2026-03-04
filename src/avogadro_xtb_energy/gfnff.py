@@ -17,9 +17,10 @@ import numpy as np
 from xtb.interface import Calculator, Param
 from xtb.libxtb import VERBOSITY_MUTED
 
-# Angstrom → Bohr conversion factor
+# Conversion factors
 _ANG_TO_BOHR = 1.0 / 0.52917721067
-
+_HARTREE_TO_KJ_MOL = 2625.4996394799
+_HARTREE_BOHR_TO_KJ_MOL_ANG = _HARTREE_TO_KJ_MOL / _ANG_TO_BOHR
 
 @contextmanager
 def _suppress_c_stdout():
@@ -74,9 +75,9 @@ def run():
         calc.update(coordinates)
         calc.singlepoint(res)
 
-        print("AvogadroEnergy:", res.get_energy())  # Hartree
+        print("AvogadroEnergy:", res.get_energy() * _HARTREE_TO_KJ_MOL)  
         print("AvogadroGradient:")
-        grad = res.get_gradient() * 4961.475  # Hartree/Bohr → kJ/mol/Å
+        grad = res.get_gradient() * _HARTREE_BOHR_TO_KJ_MOL_ANG
         output = np.array2string(grad)
         output = output.replace("[", "").replace("]", "")
         print(output)
