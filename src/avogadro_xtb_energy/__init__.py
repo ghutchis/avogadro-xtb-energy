@@ -16,16 +16,28 @@ def main():
     parser = argparse.ArgumentParser("avogadro-xtb-energy")
     parser.add_argument("feature")
     parser.add_argument("--lang", nargs="?", default="en")
+    parser.add_argument("--protocol", nargs="?", default="text-v1")
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
 
+    binary = args.protocol.startswith("binary")
+
     match args.feature:
         case "GFN1":
-            from .gfn1 import run
+            if binary:
+                from .gfn1_binary import run
+            else:
+                from .gfn1 import run
             run()
         case "GFN2":
-            from .gfn2 import run
+            if binary:
+                from .gfn2_binary import run
+            else:
+                from .gfn2 import run
             run()
         case "GFN-FF":
-            from .gfnff import run
+            if binary:
+                from .gfnff_binary import run
+            else:
+                from .gfnff import run
             run()
