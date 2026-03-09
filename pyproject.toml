@@ -5,6 +5,7 @@ license = "BSD-3-Clause"
 name = "avogadro-xtb-energy"
 requires-python = ">= 3.11"
 version = "0.2.0"
+description = "Energy model using XTB-GFN-FF, GFN1 and GFN2"
 
 [project.scripts]
 avogadro-xtb-energy = "avogadro_xtb_energy:main"
