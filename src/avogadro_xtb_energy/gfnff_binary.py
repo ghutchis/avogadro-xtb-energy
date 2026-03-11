@@ -68,7 +68,11 @@ def run():
             calc.update(coords_bohr)
             calc.singlepoint(res)
 
-            if request.wants_gradient:
+            if request.wants_energy_and_gradient:
+                energy = res.get_energy() * _HARTREE_TO_KJ_MOL
+                grad = res.get_gradient() * _HARTREE_BOHR_TO_KJ_MOL_ANG
+                request.send_energy_and_gradient(energy, grad)
+            elif request.wants_gradient:
                 grad = res.get_gradient() * _HARTREE_BOHR_TO_KJ_MOL_ANG
                 request.send_gradient(grad)
             else:
